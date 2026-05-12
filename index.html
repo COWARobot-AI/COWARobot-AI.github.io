@@ -49,11 +49,11 @@
 
   <link rel="stylesheet" href="static/css/bulma.min.css">
   <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
-  <link rel="stylesheet" href="static/css/index.css">
+  <link rel="stylesheet" href="static/css/index.css?v=20260512-results">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <script defer src="static/js/fontawesome.all.min.js"></script>
-  <script defer src="static/js/index.js"></script>
+  <script defer src="static/js/index.js?v=20260512-results"></script>
 
   <script type="application/ld+json">
   {
@@ -233,21 +233,21 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section results-section">
       <div class="container is-max-desktop">
         <h2 class="title is-3">Results</h2>
-        <div class="metric-grid">
-          <div class="metric-card">
+        <div class="metric-grid columns is-variable is-4">
+          <div class="metric-card column box">
             <span class="metric-value">89.1</span>
             <span class="metric-label">NAVSIM v1 PDMS</span>
             <p>Best overall perception-free PDMS reported in the report, with strong NC, ego progress, and time-to-collision scores.</p>
           </div>
-          <div class="metric-card">
+          <div class="metric-card column box">
             <span class="metric-value">0.33 m</span>
             <span class="metric-label">nuScenes Avg. L2</span>
             <p>Lowest average L2 trajectory error among compared methods, improving mid- and long-horizon accuracy.</p>
           </div>
-          <div class="metric-card">
+          <div class="metric-card column box">
             <span class="metric-value">0.11%</span>
             <span class="metric-label">nuScenes Avg. Collision</span>
             <p>Best average collision rate, showing improved planning accuracy without sacrificing safety-related behavior.</p>
@@ -261,8 +261,8 @@
 
         <div class="table-block">
           <h3 class="title is-5">NAVSIM v1 Benchmark</h3>
-          <div class="table-scroll">
-            <table class="results-table">
+          <div class="table-scroll table-container">
+            <table class="results-table table is-fullwidth is-striped is-hoverable">
               <thead>
                 <tr>
                   <th>Type</th>
@@ -439,8 +439,8 @@
 
         <div class="table-block">
           <h3 class="title is-5">nuScenes Benchmark</h3>
-          <div class="table-scroll">
-            <table class="results-table">
+          <div class="table-scroll table-container">
+            <table class="results-table table is-fullwidth is-striped is-hoverable">
               <thead>
                 <tr>
                   <th rowspan="2">Method</th>
