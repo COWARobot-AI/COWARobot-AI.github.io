@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="title" content="The DAWN of World-Action Interactive Models">
+  <meta name="description" content="DAWN introduces World-Action Interactive Models for autonomous driving, coupling latent world prediction with action denoising.">
+  <meta name="keywords" content="DAWN, World-Action Interactive Models, WAIM, world action models, autonomous driving, trajectory planning, latent world models">
+  <meta name="author" content="Hongbo Lu, Liang Yao, Chenghao He, Haoyu Wang, Xiang Gu, Xianfei Li, Wenlong Liao, Tao He, Pai Peng">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="COWARobot">
+  <meta property="og:title" content="The DAWN of World-Action Interactive Models">
+  <meta property="og:description" content="A latent generative model that recursively couples world prediction and action denoising for autonomous driving.">
+  <meta property="og:url" content="https://cowarobot-ai.github.io/DAWN/">
+  <meta property="og:image" content="https://cowarobot-ai.github.io/static/images/dawn_overview.png">
+  <meta property="og:image:alt" content="The DAWN of World-Action Interactive Models">
+  <meta property="article:published_time" content="2026-05-11T00:00:00.000Z">
+  <meta property="article:section" content="Technical Report">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="The DAWN of World-Action Interactive Models">
+  <meta name="twitter:description" content="DAWN couples world prediction and action denoising through short explicit latent rollout.">
+  <meta name="twitter:image" content="https://cowarobot-ai.github.io/static/images/dawn_overview.png">
+
+  <meta name="citation_title" content="The DAWN of World-Action Interactive Models">
+  <meta name="citation_author" content="Lu, Hongbo">
+  <meta name="citation_author" content="Yao, Liang">
+  <meta name="citation_author" content="He, Chenghao">
+  <meta name="citation_author" content="Wang, Haoyu">
+  <meta name="citation_author" content="Gu, Xiang">
+  <meta name="citation_author" content="Li, Xianfei">
+  <meta name="citation_author" content="Liao, Wenlong">
+  <meta name="citation_author" content="He, Tao">
+  <meta name="citation_author" content="Peng, Pai">
+  <meta name="citation_publication_date" content="2026/05/11">
+  <meta name="citation_technical_report_institution" content="COWARobot Co. Ltd">
+  <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2605.11550">
+
+  <meta name="theme-color" content="#0f766e">
+  <meta name="msapplication-TileColor" content="#0f766e">
+
+  <title>The DAWN of World-Action Interactive Models | COWARobot</title>
+  <link rel="canonical" href="https://cowarobot-ai.github.io/DAWN/">
+
+  <link rel="icon" type="image/x-icon" href="../static/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static/images/favicon.ico">
+
+  <link rel="stylesheet" href="../static/css/bulma.min.css">
+  <link rel="stylesheet" href="../static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="../static/css/index.css?v=20260806-series">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script defer src="../static/js/fontawesome.all.min.js"></script>
+  <script defer src="../static/js/index.js?v=20260806-series"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "The DAWN of World-Action Interactive Models",
+    "description": "DAWN introduces World-Action Interactive Models and instantiates them as a latent generative model for autonomous driving.",
+    "author": [
+      {"@type": "Person", "name": "Hongbo Lu"},
+      {"@type": "Person", "name": "Liang Yao"},
+      {"@type": "Person", "name": "Chenghao He"},
+      {"@type": "Person", "name": "Haoyu Wang"},
+      {"@type": "Person", "name": "Xiang Gu"},
+      {"@type": "Person", "name": "Xianfei Li"},
+      {"@type": "Person", "name": "Wenlong Liao"},
+      {"@type": "Person", "name": "Tao He"},
+      {"@type": "Person", "name": "Pai Peng"}
+    ],
+    "datePublished": "2026-05-11",
+    "publisher": {"@type": "Organization", "name": "COWARobot Co. Ltd"},
+    "url": "https://cowarobot-ai.github.io/DAWN/",
+    "image": "https://cowarobot-ai.github.io/static/images/dawn_overview.png",
+    "keywords": ["World-Action Interactive Models", "DAWN", "autonomous driving", "world action models", "trajectory planning"],
+    "isAccessibleForFree": true
+  }
+  </script>
+</head>
+<body>
+  <nav class="series-nav" aria-label="COWARobot research series">
+    <a class="series-brand" href="../">COWARobot Research</a>
+    <div class="series-links">
+      <a class="is-active" href="./">DAWN</a>
+      <a href="../RISE/">RISE</a>
+    </div>
+  </nav>
+
+  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <main id="main-content">
+    <section class="hero publication-header">
+      <div class="hero-body">
+        <div class="container is-max-desktop">
+          <div class="columns is-centered">
+            <div class="column has-text-centered">
+              <p class="publication-venue">Technical Report · May 11, 2026</p>
+              <h1 class="title is-1 publication-title">The DAWN of World-Action Interactive Models</h1>
+
+              <div class="is-size-5 publication-authors">
+                <span class="author-block">Hongbo Lu<sup>1,2,*</sup>,</span>
+                <span class="author-block">Liang Yao<sup>1,*</sup>,</span>
+                <span class="author-block">Chenghao He<sup>1,*</sup>,</span>
+                <span class="author-block">Haoyu Wang<sup>1,*</sup>,</span>
+                <span class="author-block">Xiang Gu<sup>3</sup>,</span>
+                <span class="author-block">Xianfei Li<sup>1,2</sup>,</span>
+                <span class="author-block">Wenlong Liao<sup>1,†</sup>,</span>
+                <span class="author-block">Tao He<sup>1</sup>,</span>
+                <span class="author-block">Pai Peng<sup>1,†,‡</sup></span>
+              </div>
+
+              <div class="is-size-5 publication-authors publication-affiliations">
+                <span class="author-block"><sup>1</sup>COWARobot Co. Ltd</span>
+                <span class="author-block"><sup>2</sup>Shanghai Jiao Tong University</span>
+                <span class="author-block"><sup>3</sup>Hohai University</span>
+                <span class="eql-cntrb"><small><br><sup>*</sup>Equal Contribution · <sup>†</sup>Corresponding Author · <sup>‡</sup>Project Lead</small></span>
+                <span class="eql-cntrb"><small><br>Correspondence: volans.liao@cowarobot.com, pengpai@cowarobot.com</small></span>
+              </div>
+
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2605.11550" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fas fa-file-alt"></i></span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://github.com/COOWAI/DAWN" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fab fa-github"></i></span>
+                    <span>Code</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="#BibTeX" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fas fa-quote-right"></i></span>
+                    <span>BibTeX</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section paper-figure-section">
+      <div class="container is-max-desktop">
+        <figure class="paper-figure">
+          <img src="../static/images/waim_concept.png" alt="From WAMs to WAIM concept diagram" loading="eager">
+          <figcaption>Figure 1. From WAMs to WAIM: world and action are coupled during inference.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section hero is-light">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Abstract</h2>
+            <div class="content has-text-justified">
+              <p>
+                A plausible scene evolution depends on the maneuver being considered, while a good maneuver depends on how the scene may evolve. Existing World Action Models (WAMs) largely miss this reciprocity, treating world prediction and action generation as either isolated parallel branches or rigid predict-then-plan pipelines.
+              </p>
+              <p>
+                DAWN formalizes this perspective as World-Action Interactive Models (WAIMs) and instantiates it for autonomous driving as a compact latent generative model. It couples a World Predictor with a World-Conditioned Action Denoiser: the predicted world hypothesis conditions action denoising, while the denoised action hypothesis is fed back to update world prediction, recursively refining both during inference.
+              </p>
+              <p>
+                Rather than eliminating test-time world evolution or rolling out the full future in pixel space, DAWN performs short explicit latent rollout to support long-horizon trajectory generation in complex interactive scenes. Experiments show strong planning performance and favorable safety-related results across multiple autonomous driving benchmarks.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column">
+            <h2 class="title is-3">Core Idea</h2>
+            <div class="content">
+              <p>
+                DAWN argues that useful world-action models should not merely represent world and action together. They should let the two hypotheses co-evolve during inference: the current world hypothesis refines the action hypothesis, and the emerging action hypothesis revises the predicted world evolution.
+              </p>
+            </div>
+            <div class="feature-grid">
+              <div class="feature-card">
+                <h3>WAIM Formulation</h3>
+                <p>Future world states and future actions are inferred as coupled variables instead of independent outputs or fixed pipeline stages.</p>
+              </div>
+              <div class="feature-card">
+                <h3>Latent Rollout</h3>
+                <p>DAWN uses a short semantic latent rollout rather than expensive pixel-space future rendering.</p>
+              </div>
+              <div class="feature-card">
+                <h3>Recursive Refinement</h3>
+                <p>A World Predictor and World-Conditioned Action Denoiser repeatedly update each other to form a coherent future-action pair.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section hero is-light">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3">Method</h2>
+        <div class="columns is-variable is-5">
+          <div class="column">
+            <div class="content">
+              <h3 class="title is-5">Architecture</h3>
+              <p>
+                DAWN contains a Student Vision-Encoder, a training-time Teacher Vision-Encoder, an Auto-Encoder Resampler, a World Predictor, a World-Conditioned Action Denoiser, and a lightweight Action Head. The implementation uses V-JEPA 2 Large as the vision backbone and compresses dense visual tokens into compact latent world tokens.
+              </p>
+            </div>
+          </div>
+          <div class="column">
+            <div class="content">
+              <h3 class="title is-5">Inference</h3>
+              <p>
+                At inference time, the teacher branch is removed. DAWN encodes the current observation into latent context, produces an initial action hypothesis, alternates between short latent world rollout and action denoising, and finally decodes the refined action state into a trajectory.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="content">
+          <h3 class="title is-5">Training Recipe</h3>
+          <p>
+            The report describes four stages: large-scale driving video pretraining, Auto-Encoder Resampler training, World Predictor training on downstream datasets, and joint world-action training where action proposal and interactive refinement share denoiser weights.
+          </p>
+        </div>
+        <figure class="paper-figure">
+          <img src="../static/images/dawn_overview.png" alt="Overview of DAWN architecture" loading="lazy">
+          <figcaption>Figure 2. DAWN architecture with latent world prediction and world-conditioned action denoising.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section results-section">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3">Results</h2>
+        <div class="metric-grid columns is-variable is-4">
+          <div class="metric-card column box">
+            <span class="metric-value">89.1</span>
+            <span class="metric-label">NAVSIM v1 PDMS</span>
+            <p>Best overall perception-free PDMS reported in the report, with strong NC, ego progress, and time-to-collision scores.</p>
+          </div>
+          <div class="metric-card column box">
+            <span class="metric-value">0.33 m</span>
+            <span class="metric-label">nuScenes Avg. L2</span>
+            <p>Lowest average L2 trajectory error among compared methods, improving mid- and long-horizon accuracy.</p>
+          </div>
+          <div class="metric-card column box">
+            <span class="metric-value">0.11%</span>
+            <span class="metric-label">nuScenes Avg. Collision</span>
+            <p>Best average collision rate, showing improved planning accuracy without sacrificing safety-related behavior.</p>
+          </div>
+        </div>
+        <div class="content result-summary">
+          <p>
+            Component ablations show that interactive world-action updates improve PDMS from 85.2 to 87.9 in the lower-resolution setting. Removing either World→Action or Action→World coupling weakens the model, supporting the report's central WAIM principle that world evolution and action generation should mutually constrain each other.
+          </p>
+        </div>
+
+        <div class="table-block">
+          <h3 class="title is-5">NAVSIM v1 Benchmark</h3>
+          <div class="table-scroll table-container">
+            <table class="results-table table is-fullwidth is-striped is-hoverable">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Method</th>
+                  <th>Inputs</th>
+                  <th>NC ↑</th>
+                  <th>DAC ↑</th>
+                  <th>EP ↑</th>
+                  <th>C ↑</th>
+                  <th>TTC ↑</th>
+                  <th>PDMS ↑</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Perception-based</td>
+                  <td>Transfuser</td>
+                  <td>C &amp; L</td>
+                  <td>97.7</td>
+                  <td>92.8</td>
+                  <td>79.2</td>
+                  <td>100</td>
+                  <td>92.8</td>
+                  <td>84.0</td>
+                </tr>
+                <tr>
+                  <td>Perception-based</td>
+                  <td>Hydra-MDP</td>
+                  <td>C &amp; L</td>
+                  <td>98.4</td>
+                  <td>97.7</td>
+                  <td>85.0</td>
+                  <td>100</td>
+                  <td>94.5</td>
+                  <td>89.9</td>
+                </tr>
+                <tr>
+                  <td>Perception-based</td>
+                  <td>Hydra-MDP++</td>
+                  <td>C &amp; L</td>
+                  <td>97.6</td>
+                  <td>96.0</td>
+                  <td>80.4</td>
+                  <td>100</td>
+                  <td>93.1</td>
+                  <td>86.6</td>
+                </tr>
+                <tr>
+                  <td>Perception-based</td>
+                  <td>DiffusionDrive</td>
+                  <td>C &amp; L</td>
+                  <td>98.2</td>
+                  <td>96.2</td>
+                  <td>82.2</td>
+                  <td>100</td>
+                  <td>94.7</td>
+                  <td>88.1</td>
+                </tr>
+                <tr>
+                  <td>Perception-based</td>
+                  <td>GoalFlow</td>
+                  <td>C &amp; L</td>
+                  <td>98.4</td>
+                  <td>98.3</td>
+                  <td>85.0</td>
+                  <td>100</td>
+                  <td>94.6</td>
+                  <td>90.3</td>
+                </tr>
+                <tr>
+                  <td>Perception-based</td>
+                  <td>DriveDPO</td>
+                  <td>C &amp; L</td>
+                  <td>98.5</td>
+                  <td>98.1</td>
+                  <td>84.3</td>
+                  <td>100</td>
+                  <td>94.8</td>
+                  <td>90.0</td>
+                </tr>
+                <tr>
+                  <td>Perception-based</td>
+                  <td>iPad</td>
+                  <td>Camera</td>
+                  <td>99.2</td>
+                  <td>97.4</td>
+                  <td>87.8</td>
+                  <td>99.7</td>
+                  <td>96.3</td>
+                  <td>91.7</td>
+                </tr>
+                <tr>
+                  <td>Perception-based</td>
+                  <td>DriveSuprim</td>
+                  <td>Camera</td>
+                  <td>98.6</td>
+                  <td>98.6</td>
+                  <td>91.3</td>
+                  <td>100</td>
+                  <td>95.5</td>
+                  <td>93.5</td>
+                </tr>
+                <tr>
+                  <td>Perception-free</td>
+                  <td>LAW</td>
+                  <td>C &amp; L</td>
+                  <td>97.4</td>
+                  <td>93.3</td>
+                  <td>78.8</td>
+                  <td>100</td>
+                  <td>91.9</td>
+                  <td>83.8</td>
+                </tr>
+                <tr>
+                  <td>Perception-free</td>
+                  <td>World4Drive</td>
+                  <td>C &amp; L</td>
+                  <td>97.4</td>
+                  <td>94.3</td>
+                  <td>79.9</td>
+                  <td>100</td>
+                  <td>92.8</td>
+                  <td>85.1</td>
+                </tr>
+                <tr>
+                  <td>Perception-free</td>
+                  <td>Epona</td>
+                  <td>Camera</td>
+                  <td>97.9</td>
+                  <td>95.1</td>
+                  <td>80.4</td>
+                  <td>99.9</td>
+                  <td>93.8</td>
+                  <td>86.2</td>
+                </tr>
+                <tr>
+                  <td>Perception-free</td>
+                  <td>Drive-JEPA</td>
+                  <td>Camera</td>
+                  <td>98.7</td>
+                  <td>96.2</td>
+                  <td>82.9</td>
+                  <td>100</td>
+                  <td>95.5</td>
+                  <td>89.0</td>
+                </tr>
+                <tr>
+                  <td>Perception-free</td>
+                  <td>DAWN* (Ours)</td>
+                  <td>Camera</td>
+                  <td>98.2</td>
+                  <td>95.8</td>
+                  <td>84.2</td>
+                  <td>100</td>
+                  <td>95.8</td>
+                  <td>87.9</td>
+                </tr>
+                <tr class="ours-row">
+                  <td>Perception-free</td>
+                  <td>DAWN (Ours)</td>
+                  <td>Camera</td>
+                  <td>98.7</td>
+                  <td>95.9</td>
+                  <td>84.3</td>
+                  <td>100</td>
+                  <td>96.0</td>
+                  <td>89.1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-note">DAWN* denotes the 256×256-resolution variant reported in the technical report.</p>
+        </div>
+
+        <div class="table-block">
+          <h3 class="title is-5">nuScenes Benchmark</h3>
+          <div class="table-scroll table-container">
+            <table class="results-table table is-fullwidth is-striped is-hoverable">
+              <thead>
+                <tr>
+                  <th rowspan="2">Method</th>
+                  <th colspan="4">L2 (m) ↓</th>
+                  <th colspan="4">Collision Rate (%) ↓</th>
+                </tr>
+                <tr>
+                  <th>1s</th>
+                  <th>2s</th>
+                  <th>3s</th>
+                  <th>Avg.</th>
+                  <th>1s</th>
+                  <th>2s</th>
+                  <th>3s</th>
+                  <th>Avg.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>ST-P3</td>
+                  <td>1.33</td>
+                  <td>2.11</td>
+                  <td>2.90</td>
+                  <td>2.11</td>
+                  <td>0.23</td>
+                  <td>0.62</td>
+                  <td>1.27</td>
+                  <td>0.71</td>
+                </tr>
+                <tr>
+                  <td>OccNet</td>
+                  <td>1.29</td>
+                  <td>2.13</td>
+                  <td>2.99</td>
+                  <td>2.13</td>
+                  <td>0.21</td>
+                  <td>0.59</td>
+                  <td>1.37</td>
+                  <td>0.72</td>
+                </tr>
+                <tr>
+                  <td>UniAD</td>
+                  <td>0.48</td>
+                  <td>0.96</td>
+                  <td>1.65</td>
+                  <td>1.03</td>
+                  <td>0.05</td>
+                  <td>0.17</td>
+                  <td>0.71</td>
+                  <td>0.31</td>
+                </tr>
+                <tr>
+                  <td>VAD</td>
+                  <td>0.41</td>
+                  <td>0.70</td>
+                  <td>1.05</td>
+                  <td>0.72</td>
+                  <td>0.07</td>
+                  <td>0.18</td>
+                  <td>0.43</td>
+                  <td>0.23</td>
+                </tr>
+                <tr>
+                  <td>PPAD</td>
+                  <td>0.31</td>
+                  <td>0.56</td>
+                  <td>0.87</td>
+                  <td>0.58</td>
+                  <td>0.08</td>
+                  <td>0.12</td>
+                  <td>0.38</td>
+                  <td>0.19</td>
+                </tr>
+                <tr>
+                  <td>GenAD</td>
+                  <td>0.28</td>
+                  <td>0.49</td>
+                  <td>0.78</td>
+                  <td>0.52</td>
+                  <td>0.08</td>
+                  <td>0.14</td>
+                  <td>0.34</td>
+                  <td>0.19</td>
+                </tr>
+                <tr>
+                  <td>BEV-Planner</td>
+                  <td>0.30</td>
+                  <td>0.52</td>
+                  <td>0.83</td>
+                  <td>0.55</td>
+                  <td>0.10</td>
+                  <td>0.37</td>
+                  <td>1.30</td>
+                  <td>0.59</td>
+                </tr>
+                <tr>
+                  <td>LAW</td>
+                  <td>0.26</td>
+                  <td>0.57</td>
+                  <td>1.01</td>
+                  <td>0.61</td>
+                  <td>0.14</td>
+                  <td>0.21</td>
+                  <td>0.54</td>
+                  <td>0.30</td>
+                </tr>
+                <tr>
+                  <td>World4Drive</td>
+                  <td>0.23</td>
+                  <td>0.47</td>
+                  <td>0.81</td>
+                  <td>0.50</td>
+                  <td>0.02</td>
+                  <td>0.12</td>
+                  <td>0.33</td>
+                  <td>0.16</td>
+                </tr>
+                <tr>
+                  <td>WorldRFT</td>
+                  <td>0.21</td>
+                  <td>0.44</td>
+                  <td>0.76</td>
+                  <td>0.47</td>
+                  <td>0.10</td>
+                  <td>0.11</td>
+                  <td>0.23</td>
+                  <td>0.15</td>
+                </tr>
+                <tr class="ours-row">
+                  <td>DAWN (Ours)</td>
+                  <td>0.17</td>
+                  <td>0.31</td>
+                  <td>0.52</td>
+                  <td>0.33</td>
+                  <td>0.00</td>
+                  <td>0.10</td>
+                  <td>0.23</td>
+                  <td>0.11</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="columns is-variable is-5 result-figures">
+          <div class="column">
+            <figure class="paper-figure compact">
+              <img src="../static/images/interactive_rounds.png" alt="Effect of interactive rounds" loading="lazy">
+              <figcaption>Figure 3. Planning quality across different numbers of interactive rounds.</figcaption>
+            </figure>
+          </div>
+          <div class="column">
+            <figure class="paper-figure compact">
+              <img src="../static/images/qualitative_results.png" alt="Qualitative planning results" loading="lazy">
+              <figcaption>Figure 4. Qualitative planning results in representative driving scenarios.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="BibTeX">
+      <div class="container is-max-desktop content">
+        <div class="bibtex-header">
+          <h2 class="title">BibTeX</h2>
+          <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
+            <i class="fas fa-copy"></i>
+            <span class="copy-text">Copy</span>
+          </button>
+        </div>
+        <pre id="bibtex-code"><code>@misc{lu2026dawn,
+      title={The DAWN of World-Action Interactive Models},
+      author={Hongbo Lu and Liang Yao and Chenghao He and Haoyu Wang and Xiang Gu and Xianfei Li and Wenlong Liao and Tao He and Pai Peng},
+      year={2026},
+      eprint={2605.11550},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2605.11550},
+}</code></pre>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>, adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="title" content="RISE: Adaptive Imagination for World Action Models">
+  <meta name="description" content="RISE adaptively allocates imagination in World Action Models through sequential Roll/Stop decisions guided by future planning gain.">
+  <meta name="keywords" content="RISE, World Action Models, adaptive imagination, autonomous driving, CounterDrive, latent rollout">
+  <meta name="author" content="Hongbo Lu, Liang Yao, Chenghao He, Hao Han, Fan Liu, Wenlong Liao, Tao He, Pai Peng">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="COWARobot Research">
+  <meta property="og:title" content="RISE: Adaptive Imagination for World Action Models">
+  <meta property="og:description" content="Scene-dependent imagination for efficient and safety-aware World Action Models.">
+  <meta property="og:url" content="https://cowarobot-ai.github.io/RISE/">
+  <meta property="og:image" content="https://cowarobot-ai.github.io/static/images/rise_overview.png">
+  <meta property="article:published_time" content="2026-07-31T00:00:00.000Z">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RISE: Adaptive Imagination for World Action Models">
+  <meta name="twitter:description" content="Adaptive Roll/Stop scheduling for World Action Models.">
+  <meta name="twitter:image" content="https://cowarobot-ai.github.io/static/images/rise_overview.png">
+
+  <meta name="citation_title" content="RISE: Adaptive Imagination for World Action Models">
+  <meta name="citation_author" content="Lu, Hongbo">
+  <meta name="citation_author" content="Yao, Liang">
+  <meta name="citation_author" content="He, Chenghao">
+  <meta name="citation_author" content="Han, Hao">
+  <meta name="citation_author" content="Liu, Fan">
+  <meta name="citation_author" content="Liao, Wenlong">
+  <meta name="citation_author" content="He, Tao">
+  <meta name="citation_author" content="Peng, Pai">
+  <meta name="citation_publication_date" content="2026/07/31">
+  <meta name="citation_technical_report_institution" content="COWARobot Co. Ltd">
+
+  <meta name="theme-color" content="#b45309">
+  <title>RISE: Adaptive Imagination for World Action Models | COWARobot</title>
+  <link rel="canonical" href="https://cowarobot-ai.github.io/RISE/">
+  <link rel="icon" type="image/x-icon" href="../static/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static/images/favicon.ico">
+
+  <link rel="stylesheet" href="../static/css/bulma.min.css">
+  <link rel="stylesheet" href="../static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="../static/css/index.css?v=20260806-series">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script defer src="../static/js/fontawesome.all.min.js"></script>
+  <script defer src="../static/js/index.js?v=20260806-series"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "RISE: Adaptive Imagination for World Action Models",
+    "description": "RISE uses Future Planning Gain to make sequential Roll/Stop decisions for scene-dependent latent rollout.",
+    "author": [
+      {"@type": "Person", "name": "Hongbo Lu"},
+      {"@type": "Person", "name": "Liang Yao"},
+      {"@type": "Person", "name": "Chenghao He"},
+      {"@type": "Person", "name": "Hao Han"},
+      {"@type": "Person", "name": "Fan Liu"},
+      {"@type": "Person", "name": "Wenlong Liao"},
+      {"@type": "Person", "name": "Tao He"},
+      {"@type": "Person", "name": "Pai Peng"}
+    ],
+    "datePublished": "2026-07-31",
+    "publisher": {"@type": "Organization", "name": "COWARobot Co. Ltd"},
+    "url": "https://cowarobot-ai.github.io/RISE/",
+    "image": "https://cowarobot-ai.github.io/static/images/rise_overview.png",
+    "keywords": ["RISE", "World Action Models", "adaptive imagination", "CounterDrive", "autonomous driving"],
+    "isAccessibleForFree": true
+  }
+  </script>
+</head>
+<body class="rise-page">
+  <nav class="series-nav" aria-label="COWARobot research series">
+    <a class="series-brand" href="../">COWARobot Research</a>
+    <div class="series-links">
+      <a href="../DAWN/">DAWN</a>
+      <a class="is-active" href="./">RISE</a>
+    </div>
+  </nav>
+
+  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <main id="main-content">
+    <section class="hero publication-header rise-header">
+      <div class="hero-body">
+        <div class="container is-max-desktop">
+          <div class="columns is-centered">
+            <div class="column has-text-centered">
+              <p class="publication-venue">Technical Report · July 31, 2026</p>
+              <h1 class="title is-1 publication-title">RISE: Adaptive Imagination for World Action Models</h1>
+
+              <div class="is-size-5 publication-authors">
+                <span class="author-block">Hongbo Lu<sup>1,2,*</sup>,</span>
+                <span class="author-block">Liang Yao<sup>1,3,*</sup>,</span>
+                <span class="author-block">Chenghao He<sup>1,*</sup>,</span>
+                <span class="author-block">Hao Han<sup>1,*</sup>,</span>
+                <span class="author-block">Fan Liu<sup>3</sup>,</span>
+                <span class="author-block">Wenlong Liao<sup>1,†</sup>,</span>
+                <span class="author-block">Tao He<sup>1</sup>,</span>
+                <span class="author-block">Pai Peng<sup>1,†,‡</sup></span>
+              </div>
+
+              <div class="is-size-5 publication-authors publication-affiliations">
+                <span class="author-block"><sup>1</sup>COWARobot Co. Ltd</span>
+                <span class="author-block"><sup>2</sup>Shanghai Jiao Tong University</span>
+                <span class="author-block"><sup>3</sup>Hohai University</span>
+                <span class="eql-cntrb"><small><br><sup>*</sup>Equal Contribution · <sup>†</sup>Corresponding Author · <sup>‡</sup>Project Lead</small></span>
+                <span class="eql-cntrb"><small><br>Correspondence: volans.liao@cowarobot.com, pengpai@cowarobot.com</small></span>
+              </div>
+
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="../DAWN/" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fas fa-layer-group"></i></span>
+                    <span>DAWN</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="#BibTeX" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fas fa-quote-right"></i></span>
+                    <span>BibTeX</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section paper-figure-section">
+      <div class="container is-max-desktop">
+        <figure class="paper-figure wide rise-asset">
+          <img src="../static/images/rise_imagination_strategies.png" alt="Comparison of fixed and adaptive imagination strategies" loading="eager" onerror="this.closest('figure').classList.add('is-missing')">
+          <div class="figure-fallback"><strong>Figure 1</strong><span>static/images/rise_imagination_strategies.png</span></div>
+          <figcaption>From fixed imagination strategies to RISE's scene-adaptive Roll/Stop scheduling.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section hero is-light">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Abstract</h2>
+            <div class="content has-text-justified">
+              <p>World Action Models improve planning by incorporating future world evolution into action generation, yet existing methods allocate a fixed imagination budget to every scene. RISE (<strong>R</strong>efining <strong>I</strong>magination through <strong>SE</strong>lective Rollout) makes sequential Roll/Stop decisions according to the expected planning benefit of continued rollout.</p>
+              <p>At each step, a Latent Evaluator estimates the risk revealed by the current prefix and how much planning could improve if imagination continues. A Rollout Gate weighs this expected benefit against additional computation cost. To overcome the single-future limitation of factual driving logs, CounterDrive supplies diverse counterfactual outcomes, risk levels, verified incident onsets, and causal annotations.</p>
+              <p>Experiments on NAVSIM and nuScenes show that RISE achieves the best overall planning performance while reducing unnecessary rollout. Transfer experiments further support its use as a plug-in scheduler across WAM architectures.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3">Adaptive Imagination</h2>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <h3>Future Planning Gain</h3>
+            <p>Measures how much the planning score could improve by continuing from the current latent prefix.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Latent Evaluator</h3>
+            <p>Predicts a Risk Profile for revealed hazards and a gain profile for the remaining rollout choices.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Rollout Gate</h3>
+            <p>Balances predicted planning gain against computation cost and makes a fresh Roll/Stop decision at every step.</p>
+          </article>
+        </div>
+
+        <figure class="paper-figure wide rise-asset method-figure">
+          <img src="../static/images/rise_overview.png" alt="Overview of the RISE training and inference framework" loading="lazy" onerror="this.closest('figure').classList.add('is-missing')">
+          <div class="figure-fallback"><strong>Figure 2</strong><span>static/images/rise_overview.png</span></div>
+          <figcaption>RISE trains future prediction, variable-prefix planning, risk and gain estimation, and a cost-aware Rollout Gate.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section counterdrive-section">
+      <div class="container is-max-desktop">
+        <div class="columns is-variable is-6">
+          <div class="column is-7">
+            <h2 class="title is-3">CounterDrive</h2>
+            <div class="content">
+              <p>CounterDrive augments selected factual scenes with counterfactual 10-second driving videos. Human annotators verify ego-motion consistency, identify incident onset, mark generation distortions, and categorize causal behavior. Accepted clips supervise future prediction, while verified factual-counterfactual pairs provide temporally localized risk supervision.</p>
+            </div>
+          </div>
+          <div class="column is-5 dataset-stats">
+            <div><strong>5,013</strong><span>NAVSIM train clips</span></div>
+            <div><strong>1,000</strong><span>NAVSIM test clips</span></div>
+            <div><strong>2,432</strong><span>nuScenes train clips</span></div>
+            <div><strong>511</strong><span>nuScenes test clips</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section results-section">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3">Results</h2>
+        <div class="metric-grid columns is-variable is-3">
+          <div class="metric-card column box"><span class="metric-value">91.5</span><span class="metric-label">NAVSIM v1 PDMS</span><p>Best overall planning performance, improving the strongest baseline by 0.8 points.</p></div>
+          <div class="metric-card column box"><span class="metric-value">90.8</span><span class="metric-label">NAVSIM v2 EPDMS</span><p>Ranks first or ties for first on seven of nine component metrics.</p></div>
+          <div class="metric-card column box"><span class="metric-value">0.31 m</span><span class="metric-label">nuScenes Avg. L2</span><p>State-of-the-art trajectory accuracy with a 0.10 average collision rate.</p></div>
+          <div class="metric-card column box"><span class="metric-value">2.40</span><span class="metric-label">Avg. Rollout</span><p>Adaptive scheduling reaches 90.8 EPDMS at 287.429 ms latency.</p></div>
+        </div>
+
+        <div class="table-block">
+          <h3 class="title is-5">nuScenes Benchmark</h3>
+          <div class="table-scroll table-container">
+            <table class="results-table table is-fullwidth is-striped is-hoverable">
+              <thead><tr><th rowspan="2">Method</th><th colspan="4">L2 (m) ↓</th><th colspan="4">Collision Rate ↓</th></tr><tr><th>1s</th><th>2s</th><th>3s</th><th>Avg.</th><th>1s</th><th>2s</th><th>3s</th><th>Avg.</th></tr></thead>
+              <tbody>
+                <tr><td>BEV-Planner</td><td>0.30</td><td>0.52</td><td>0.83</td><td>0.55</td><td>0.10</td><td>0.37</td><td>1.30</td><td>0.59</td></tr>
+                <tr><td>LAW</td><td>0.26</td><td>0.57</td><td>1.01</td><td>0.61</td><td>0.14</td><td>0.21</td><td>0.54</td><td>0.30</td></tr>
+                <tr><td>World4Drive</td><td>0.23</td><td>0.47</td><td>0.81</td><td>0.50</td><td>0.02</td><td>0.12</td><td>0.33</td><td>0.16</td></tr>
+                <tr><td>WorldRFT</td><td>0.21</td><td>0.44</td><td>0.76</td><td>0.47</td><td>0.10</td><td>0.11</td><td>0.23</td><td>0.15</td></tr>
+                <tr><td>DAWN</td><td>0.17</td><td>0.31</td><td>0.52</td><td>0.33</td><td>0.00</td><td>0.10</td><td>0.23</td><td>0.11</td></tr>
+                <tr class="ours-row"><td>RISE</td><td>0.16</td><td>0.29</td><td>0.49</td><td>0.31</td><td>0.00</td><td>0.11</td><td>0.20</td><td>0.10</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="table-block">
+          <h3 class="title is-5">NAVSIM v1 Benchmark</h3>
+          <div class="table-scroll table-container">
+            <table class="results-table table is-fullwidth is-striped is-hoverable">
+              <thead><tr><th>Method</th><th>NC ↑</th><th>DAC ↑</th><th>EP ↑</th><th>C ↑</th><th>TTC ↑</th><th>PDMS ↑</th></tr></thead>
+              <tbody>
+                <tr><td>DrivingGPT</td><td>98.9</td><td>90.7</td><td>79.7</td><td>95.6</td><td>94.9</td><td>82.4</td></tr>
+                <tr><td>LAW</td><td>97.4</td><td>93.3</td><td>78.8</td><td>100</td><td>91.9</td><td>83.8</td></tr>
+                <tr><td>World4Drive</td><td>97.4</td><td>94.3</td><td>79.9</td><td>100</td><td>92.8</td><td>85.1</td></tr>
+                <tr><td>Epona</td><td>97.9</td><td>95.1</td><td>80.4</td><td>99.9</td><td>93.8</td><td>86.2</td></tr>
+                <tr><td>DriveVLA-W0</td><td>98.4</td><td>95.3</td><td>80.9</td><td>100</td><td>95.2</td><td>87.2</td></tr>
+                <tr><td>PWM</td><td>98.6</td><td>95.9</td><td>81.8</td><td>100</td><td>95.4</td><td>88.1</td></tr>
+                <tr><td>DreamerAD</td><td>98.0</td><td>97.2</td><td>83.1</td><td>100</td><td>94.3</td><td>88.7</td></tr>
+                <tr><td>DriveLaW</td><td>99.0</td><td>97.1</td><td>81.3</td><td>100</td><td>96.7</td><td>89.1</td></tr>
+                <tr><td>Drive-JEPA</td><td>98.7</td><td>96.2</td><td>82.9</td><td>100</td><td>95.5</td><td>89.0</td></tr>
+                <tr><td>DAWN</td><td>98.7</td><td>95.9</td><td>84.3</td><td>100</td><td>96.0</td><td>89.1</td></tr>
+                <tr><td>EponaV2</td><td>98.6</td><td>97.9</td><td>84.8</td><td>100</td><td>95.7</td><td>90.4</td></tr>
+                <tr><td>DriveFuture</td><td>98.8</td><td>99.1</td><td>95.4</td><td>100</td><td>84.2</td><td>90.7</td></tr>
+                <tr class="ours-row"><td>RISE</td><td>99.1</td><td>97.7</td><td>98.3</td><td>100</td><td>98.6</td><td>91.5</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="table-block">
+          <h3 class="title is-5">NAVSIM v2 Benchmark</h3>
+          <div class="table-scroll table-container">
+            <table class="results-table table is-fullwidth is-striped is-hoverable rise-wide-table">
+              <thead><tr><th>Method</th><th>NC ↑</th><th>DAC ↑</th><th>DDC ↑</th><th>TL ↑</th><th>EP ↑</th><th>TTC ↑</th><th>LK ↑</th><th>HC ↑</th><th>EC ↑</th><th>EPDMS ↑</th></tr></thead>
+              <tbody>
+                <tr><td>DAWN</td><td>97.3</td><td>92.0</td><td>99.1</td><td>99.7</td><td>87.4</td><td>96.6</td><td>96.0</td><td>98.3</td><td>85.5</td><td>83.2</td></tr>
+                <tr><td>DreamerAD</td><td>98.0</td><td>97.2</td><td>99.5</td><td>99.8</td><td>87.8</td><td>97.4</td><td>97.5</td><td>98.3</td><td>72.4</td><td>85.1</td></tr>
+                <tr><td>DriveLaW</td><td>98.7</td><td>96.9</td><td>99.6</td><td>99.8</td><td>87.5</td><td>98.3</td><td>97.6</td><td>98.4</td><td>77.4</td><td>88.6</td></tr>
+                <tr><td>EponaV2</td><td>98.5</td><td>97.4</td><td>99.5</td><td>99.9</td><td>87.9</td><td>98.1</td><td>97.7</td><td>98.2</td><td>77.4</td><td>88.9</td></tr>
+                <tr><td>Latent-WAM</td><td>98.1</td><td>97.3</td><td>99.6</td><td>99.8</td><td>87.7</td><td>97.3</td><td>97.6</td><td>98.1</td><td>87.3</td><td>89.3</td></tr>
+                <tr><td>DriveFuture</td><td>98.8</td><td>99.1</td><td>99.6</td><td>99.9</td><td>86.6</td><td>98.4</td><td>96.4</td><td>98.3</td><td>74.8</td><td>89.9</td></tr>
+                <tr class="ours-row"><td>RISE</td><td>99.1</td><td>97.7</td><td>99.7</td><td>99.9</td><td>87.8</td><td>98.7</td><td>98.0</td><td>98.4</td><td>87.4</td><td>90.8</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section hero is-light analysis-section">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3">Why Adaptive Rollout?</h2>
+        <div class="columns is-variable is-5">
+          <div class="column">
+            <figure class="paper-figure compact rise-asset">
+              <img src="../static/images/rise_rollout_depths.png" alt="Distribution and performance across preferred rollout depths" loading="lazy" onerror="this.closest('figure').classList.add('is-missing')">
+              <div class="figure-fallback"><strong>Figure 3</strong><span>static/images/rise_rollout_depths.png</span></div>
+              <figcaption>Different scenes prefer different rollout depths; no fixed budget is uniformly optimal.</figcaption>
+            </figure>
+          </div>
+          <div class="column">
+            <figure class="paper-figure compact rise-asset">
+              <img src="../static/images/rise_scene_groups.png" alt="Representative scenes grouped by preferred rollout depth" loading="lazy" onerror="this.closest('figure').classList.add('is-missing')">
+              <div class="figure-fallback"><strong>Figure 4</strong><span>static/images/rise_scene_groups.png</span></div>
+              <figcaption>Dense traffic and involved interactions generally benefit from deeper imagination.</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="columns is-variable is-5 ablation-tables">
+          <div class="column">
+            <h3 class="title is-5">Key Components</h3>
+            <div class="table-scroll table-container"><table class="results-table table is-fullwidth is-striped"><thead><tr><th>Scheduler</th><th>CounterDrive</th><th>EPDMS ↑</th><th>PDMS ↑</th></tr></thead><tbody><tr><td>-</td><td>-</td><td>88.9</td><td>89.7</td></tr><tr><td>-</td><td>✓</td><td>89.8</td><td>90.5</td></tr><tr><td>✓</td><td>-</td><td>90.4</td><td>91.2</td></tr><tr class="ours-row"><td>✓</td><td>✓</td><td>90.8</td><td>91.5</td></tr></tbody></table></div>
+          </div>
+          <div class="column">
+            <h3 class="title is-5">Adaptive Rollout Strategy</h3>
+            <div class="table-scroll table-container"><table class="results-table table is-fullwidth is-striped"><thead><tr><th>Method</th><th>Avg. Rollout</th><th>Latency (ms)</th><th>EPDMS ↑</th></tr></thead><tbody><tr><td>Random Stop</td><td>2.03</td><td>264.075</td><td>89.5</td></tr><tr><td>Latent Margin</td><td>2.98</td><td>308.532</td><td>89.7</td></tr><tr class="ours-row"><td>Scheduler</td><td>2.40</td><td>287.429</td><td>90.8</td></tr></tbody></table></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3">Qualitative Results</h2>
+        <figure class="paper-figure wide rise-asset">
+          <img src="../static/images/rise_qualitative_results.png" alt="Qualitative trajectory comparison across adaptive rollout depths" loading="lazy" onerror="this.closest('figure').classList.add('is-missing')">
+          <div class="figure-fallback"><strong>Figure 5</strong><span>static/images/rise_qualitative_results.png</span></div>
+          <figcaption>RISE remains aligned with human trajectories and feasible lane geometry across scene-dependent rollout depths.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" id="BibTeX">
+      <div class="container is-max-desktop content">
+        <div class="bibtex-header">
+          <h2 class="title">BibTeX</h2>
+          <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX to clipboard"><i class="fas fa-copy"></i><span class="copy-text">Copy</span></button>
+        </div>
+        <pre id="bibtex-code"><code>@misc{lu2026rise,
+  title={RISE: Adaptive Imagination for World Action Models},
+  author={Hongbo Lu and Liang Yao and Chenghao He and Hao Han and Fan Liu and Wenlong Liao and Tao He and Pai Peng},
+  year={2026},
+  url={https://cowarobot-ai.github.io/RISE/}
+}</code></pre>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container"><div class="columns is-centered"><div class="column is-8"><div class="content"><p>RISE is the second project in COWARobot's World Action Model research series. See the preceding work, <a href="../DAWN/">DAWN</a>.</p></div></div></div></div>
+  </footer>
+</body>
+</html>

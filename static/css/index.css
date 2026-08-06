@@ -737,3 +737,388 @@ a:focus {
     flex-direction: column;
   }
 }
+
+/* Research series navigation */
+.series-nav {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  height: 58px;
+  justify-content: space-between;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 20;
+}
+
+.series-brand {
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.series-links {
+  align-items: center;
+  display: flex;
+  gap: 0.35rem;
+}
+
+.series-links a {
+  border-bottom: 2px solid transparent;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.55rem 0.75rem 0.45rem;
+}
+
+.series-links a:hover,
+.series-links a.is-active {
+  border-color: var(--primary-color);
+  color: var(--text-primary);
+}
+
+/* Root project index */
+.series-home {
+  background: #ffffff;
+}
+
+.series-intro {
+  background: #f6f8f8;
+  border-bottom: 1px solid var(--border-color);
+  padding: 5.5rem 1.5rem 4.5rem;
+}
+
+.series-kicker {
+  color: var(--primary-color);
+  font-size: 0.78rem;
+  font-weight: 800;
+  margin-bottom: 0.85rem;
+  text-transform: uppercase;
+}
+
+.series-intro h1 {
+  color: var(--text-primary);
+  font-size: clamp(2.6rem, 7vw, 5.5rem);
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1;
+  margin: 0;
+}
+
+.series-lede {
+  color: var(--text-secondary);
+  font-size: 1.15rem;
+  line-height: 1.6;
+  margin-top: 1.5rem;
+  max-width: 760px;
+}
+
+.project-index {
+  padding-bottom: 5rem;
+  padding-top: 3.5rem;
+}
+
+.project-index-heading {
+  align-items: baseline;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  padding-bottom: 1rem;
+}
+
+.project-index-heading .title {
+  margin: 0;
+}
+
+.project-index-heading span {
+  color: var(--text-light);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.project-entry {
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  display: grid;
+  gap: 2.5rem;
+  grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+  padding: 2.25rem 0;
+}
+
+.project-media {
+  align-items: center;
+  aspect-ratio: 16 / 8;
+  background: #f6f8f8;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.project-media img {
+  height: 100%;
+  object-fit: contain;
+  width: 100%;
+}
+
+.project-media-fallback {
+  color: #b45309;
+  display: none;
+  font-size: 3rem;
+  font-weight: 800;
+}
+
+.project-media.is-missing img {
+  display: none;
+}
+
+.project-media.is-missing .project-media-fallback {
+  display: block;
+}
+
+.rise-media {
+  background: #fff8ed;
+  border-color: #f1d6ad;
+}
+
+.project-meta {
+  color: var(--text-light);
+  display: flex;
+  font-size: 0.75rem;
+  font-weight: 700;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+}
+
+.project-copy h3 {
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: 0.9rem;
+}
+
+.project-copy h3 a {
+  color: var(--text-primary);
+}
+
+.project-copy p {
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.project-link {
+  color: var(--primary-color);
+  display: inline-flex;
+  font-size: 0.88rem;
+  font-weight: 800;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.series-footer {
+  background: #172026;
+  color: #dce5e3;
+  padding: 1.5rem;
+}
+
+.series-footer .container {
+  display: flex;
+  font-size: 0.82rem;
+  justify-content: space-between;
+}
+
+/* RISE project page */
+.rise-page {
+  --primary-color: #b45309;
+  --primary-hover: #92400e;
+  --accent-color: #2563eb;
+  --background-accent: #fff5e6;
+  --border-color: #eadfce;
+}
+
+.rise-header {
+  background: #fffaf2;
+}
+
+.rise-page .publication-venue {
+  background: #ffedd5;
+  color: #92400e;
+}
+
+.paper-figure.wide {
+  max-width: 100%;
+}
+
+.rise-asset {
+  min-height: 220px;
+  position: relative;
+}
+
+.rise-asset .figure-fallback {
+  align-items: center;
+  background: #fff8ed;
+  color: #92400e;
+  display: none;
+  flex-direction: column;
+  gap: 0.45rem;
+  justify-content: center;
+  min-height: 220px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.rise-asset .figure-fallback strong {
+  font-size: 1.35rem;
+}
+
+.rise-asset .figure-fallback span {
+  color: #7a6351;
+  font-size: 0.85rem;
+}
+
+.rise-asset.is-missing img {
+  display: none;
+}
+
+.rise-asset.is-missing .figure-fallback {
+  display: flex;
+}
+
+.method-figure {
+  margin-top: 2rem;
+}
+
+.counterdrive-section {
+  background: #173a36;
+  color: #f4fbf9;
+}
+
+.counterdrive-section .title,
+.counterdrive-section .content,
+.counterdrive-section .content p {
+  color: #f4fbf9;
+}
+
+.dataset-stats {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dataset-stats div {
+  border-left: 2px solid #f59e0b;
+  padding: 0.35rem 0 0.35rem 0.85rem;
+}
+
+.dataset-stats strong,
+.dataset-stats span {
+  display: block;
+}
+
+.dataset-stats strong {
+  color: #ffffff;
+  font-size: 1.65rem;
+}
+
+.dataset-stats span {
+  color: #bcd1cc;
+  font-size: 0.76rem;
+  margin-top: 0.15rem;
+}
+
+.rise-page .metric-grid {
+  flex-wrap: wrap;
+}
+
+.rise-page .metric-card {
+  flex-basis: calc(25% - 1rem);
+}
+
+.rise-page .metric-value {
+  color: #b45309;
+}
+
+.rise-page .results-table.table td:nth-child(2),
+.rise-page .results-table.table th:nth-child(2) {
+  text-align: center;
+}
+
+.rise-wide-table {
+  min-width: 980px !important;
+}
+
+.analysis-section .paper-figure {
+  height: 100%;
+}
+
+.ablation-tables {
+  margin-top: 2rem;
+}
+
+.ablation-tables .results-table.table {
+  min-width: 520px;
+}
+
+@media screen and (max-width: 900px) {
+  .project-entry {
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+  }
+
+  .project-copy {
+    max-width: 680px;
+  }
+
+  .rise-page .metric-card {
+    flex-basis: calc(50% - 1rem);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .series-nav {
+    height: 54px;
+    padding: 0 1rem;
+  }
+
+  .series-brand {
+    font-size: 0.82rem;
+  }
+
+  .series-links a {
+    padding-left: 0.55rem;
+    padding-right: 0.55rem;
+  }
+
+  .series-intro {
+    padding: 4rem 1rem 3rem;
+  }
+
+  .series-intro h1 {
+    font-size: 2.8rem;
+  }
+
+  .project-entry {
+    padding: 1.5rem 0;
+  }
+
+  .project-copy h3 {
+    font-size: 1.25rem;
+  }
+
+  .series-footer .container {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .dataset-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .rise-page .metric-card {
+    flex-basis: 100%;
+  }
+}
